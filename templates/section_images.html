@@ -1,0 +1,419 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} - {{ section.module.title }} - PhyLearn{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Breadcrumb -->
+        <nav class="flex mb-6" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                        </svg>
+                        Talaba Paneli
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <a href="/module/{{ section.module.id }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
+                            {{ section.module.title }}
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">{{ section.title }}</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Header -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
+                        {% if section.section_type == 'theory' %}
+                            <svg class="w-8 h-8 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        {% elif section.section_type == 'examples' %}
+                            <svg class="w-8 h-8 mr-3 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        {% endif %}
+                        {{ section.title }}
+                    </h1>
+                    <p class="text-gray-600 dark:text-gray-300 mt-1">{{ section.module.title }}</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <button onclick="completeSection()" id="completeBtn" 
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Bo'limni yakunlash
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Viewer -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex flex-col md:flex-row items-start md:items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    O'rganish materiali
+                </h3>
+                <div class="flex items-center space-x-2 mt-4 md:mt-0">
+                    <button onclick="previousPage()" id="prevBtn" 
+                            class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Orqaga
+                    </button>
+                    <button id="pageInfo" disabled 
+                            class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700">
+                        1 / 1
+                    </button>
+                    <button onclick="nextPage()" id="nextBtn" 
+                            class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+                        Oldinga
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                    <button onclick="zoomToggle()" id="zoomBtn" 
+                            class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                        </svg>
+                        Kattalashtirish
+                    </button>
+                    <button onclick="fullscreen()" 
+                            class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="relative bg-gray-50 dark:bg-gray-900 min-h-[600px]">
+                {% if content_data and content_data.type == 'pdf_images' %}
+                    <div id="imageContainer" class="flex items-center justify-center min-h-[600px] p-4">
+                        <img id="pageImage" src="" alt="Sahifa materiali" 
+                             class="max-w-full h-auto border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg cursor-pointer transition-transform duration-300"
+                             onclick="zoomToggle()">
+                        
+                        <div id="loadingSpinner" class="absolute inset-0 flex items-center justify-center hidden">
+                            <div class="flex flex-col items-center">
+                                <svg class="animate-spin h-8 w-8 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <p class="mt-2 text-gray-600 dark:text-gray-400">Sahifa yuklanmoqda...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Thumbnail Navigation -->
+                    <div class="border-t border-gray-200 dark:border-gray-700 p-6 bg-white dark:bg-gray-800">
+                        <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                            </svg>
+                            Sahifalar bo'yicha tez navigatsiya
+                        </h4>
+                        <div id="thumbnailContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                            <!-- Thumbnails will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                {% else %}
+                    <div class="flex flex-col items-center justify-center min-h-[600px] text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Material topilmadi</h3>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Fayl yuklanmagan yoki qayta ishlanmagan</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Reading Progress -->
+        <div class="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                O'rganish progressi
+            </h3>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-4">
+                <div id="readingProgress" class="bg-green-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                <span>Ko'rilgan sahifalar: <span id="pagesRead" class="font-medium">0</span> dan <span id="totalPages" class="font-medium">0</span></span>
+                <span>O'rganish vaqti: <span id="studyTime" class="font-medium">0 daqiqa</span></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Data from server
+const pagesData = {{ content_data.pages | tojson | safe if content_data else '[]' }};
+const totalPagesCount = {{ content_data.total_pages if content_data else 0 }};
+
+// Application state
+let currentPage = 1;
+let pagesViewed = new Set();
+let startTime = new Date();
+let studyTimer = null;
+let isZoomed = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (pagesData.length > 0) {
+        initializeViewer();
+        updateStudyTime();
+        studyTimer = setInterval(updateStudyTime, 60000); // Update every minute
+    }
+});
+
+function initializeViewer() {
+    console.log('📚 Ko\'rish vositasini ishga tushirish', totalPagesCount, 'sahifa uchun');
+    
+    // Set total pages count
+    document.getElementById('totalPages').textContent = totalPagesCount;
+    
+    // Load first page
+    loadPage(1);
+    
+    // Create thumbnails
+    createThumbnails();
+    
+    // Update controls
+    updateControls();
+}
+
+function loadPage(pageNumber) {
+    if (pageNumber < 1 || pageNumber > totalPagesCount) return;
+    
+    console.log('📄 Sahifa yuklanmoqda', pageNumber);
+    
+    // Show spinner
+    document.getElementById('loadingSpinner').classList.remove('hidden');
+    
+    const pageData = pagesData[pageNumber - 1];
+    const img = document.getElementById('pageImage');
+    
+    img.onload = function() {
+        // Hide spinner
+        document.getElementById('loadingSpinner').classList.add('hidden');
+        
+        // Mark page as viewed
+        pagesViewed.add(pageNumber);
+        updateProgress();
+        
+        // Update thumbnail selection
+        updateThumbnailSelection(pageNumber);
+        
+        console.log('✅ Sahifa', pageNumber, 'yuklandi');
+    };
+    
+    img.onerror = function() {
+        document.getElementById('loadingSpinner').classList.add('hidden');
+        console.error('❌ Sahifa yuklashda xatolik', pageNumber);
+    };
+    
+    img.src = '/' + pageData.url;
+    currentPage = pageNumber;
+    updateControls();
+}
+
+function createThumbnails() {
+    const container = document.getElementById('thumbnailContainer');
+    container.innerHTML = '';
+    
+    pagesData.forEach((pageData, index) => {
+        const pageNum = index + 1;
+        const div = document.createElement('div');
+        div.className = 'thumbnail-card cursor-pointer group';
+        
+        div.innerHTML = `
+            <div class="relative overflow-hidden rounded-lg border-2 border-gray-200 dark:border-gray-600 group-hover:border-primary-500 transition-all duration-200">
+                <img src="/${pageData.url}" 
+                     class="w-full h-24 object-cover" 
+                     alt="Sahifa ${pageNum}"
+                     onclick="loadPage(${pageNum})">
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-2">
+                    <span class="text-white text-xs font-medium">${pageNum}-sahifa</span>
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(div);
+    });
+}
+
+function updateThumbnailSelection(pageNumber) {
+    // Remove selection from all thumbnails
+    document.querySelectorAll('.thumbnail-card .relative').forEach(thumb => {
+        thumb.classList.remove('border-primary-500', 'ring-2', 'ring-primary-200');
+        thumb.classList.add('border-gray-200', 'dark:border-gray-600');
+    });
+    
+    // Highlight current thumbnail
+    const currentThumbnail = document.querySelectorAll('.thumbnail-card .relative')[pageNumber - 1];
+    if (currentThumbnail) {
+        currentThumbnail.classList.remove('border-gray-200', 'dark:border-gray-600');
+        currentThumbnail.classList.add('border-primary-500', 'ring-2', 'ring-primary-200');
+    }
+}
+
+function nextPage() {
+    if (currentPage < totalPagesCount) {
+        loadPage(currentPage + 1);
+    }
+}
+
+function previousPage() {
+    if (currentPage > 1) {
+        loadPage(currentPage - 1);
+    }
+}
+
+function zoomToggle() {
+    const img = document.getElementById('pageImage');
+    const btn = document.getElementById('zoomBtn');
+    
+    if (isZoomed) {
+        // Zoom out
+        img.classList.remove('scale-150');
+        img.style.cursor = 'zoom-in';
+        btn.innerHTML = '<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>Kattalashtirish';
+        isZoomed = false;
+    } else {
+        // Zoom in
+        img.classList.add('scale-150');
+        img.style.cursor = 'zoom-out';
+        btn.innerHTML = '<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"></path></svg>Kichiklashtirish';
+        isZoomed = true;
+    }
+}
+
+function fullscreen() {
+    const img = document.getElementById('pageImage');
+    
+    if (img.requestFullscreen) {
+        img.requestFullscreen();
+    } else if (img.webkitRequestFullscreen) {
+        img.webkitRequestFullscreen();
+    } else if (img.msRequestFullscreen) {
+        img.msRequestFullscreen();
+    }
+}
+
+function updateControls() {
+    document.getElementById('pageInfo').textContent = `${currentPage} / ${totalPagesCount}`;
+    document.getElementById('prevBtn').disabled = (currentPage <= 1);
+    document.getElementById('nextBtn').disabled = (currentPage >= totalPagesCount);
+}
+
+function updateProgress() {
+    const progress = (pagesViewed.size / totalPagesCount) * 100;
+    document.getElementById('readingProgress').style.width = progress + '%';
+    document.getElementById('pagesRead').textContent = pagesViewed.size;
+    
+    // Auto-complete when 80% of pages viewed
+    if (progress >= 80) {
+        const completeBtn = document.getElementById('completeBtn');
+        completeBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+        completeBtn.classList.add('bg-yellow-600', 'hover:bg-yellow-700');
+        completeBtn.innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Yakunlashga tayyor';
+    }
+}
+
+function updateStudyTime() {
+    const now = new Date();
+    const diffMinutes = Math.floor((now - startTime) / 60000);
+    document.getElementById('studyTime').textContent = diffMinutes + ' daqiqa';
+}
+
+async function completeSection() {
+    if (pagesViewed.size < totalPagesCount * 0.5) {
+        showToast('Iltimos, bo\'limni yakunlashdan oldin ko\'proq materiallarni o\'rganing (kamida 50% sahifalar)', 'warning');
+        return;
+    }
+    
+    const confirmed = confirm('Ushbu bo\'limni yakunlashni xohlaysizmi?');
+    if (!confirmed) return;
+    
+    try {
+        const response = await fetch('/section/{{ section.id }}/complete', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            showToast('Bo\'lim muvaffaqiyatli yakunlandi!', 'success');
+            setTimeout(() => {
+                window.location.href = '/module/{{ section.module.id }}';
+            }, 1000);
+        } else {
+            showToast(data.message || 'Bo\'limni yakunlashda xatolik', 'danger');
+        }
+    } catch (error) {
+        showToast('Ulanish xatosi: ' + error.message, 'danger');
+    }
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') {
+        previousPage();
+    } else if (e.key === 'ArrowRight') {
+        nextPage();
+    } else if (e.key === ' ') {
+        e.preventDefault();
+        zoomToggle();
+    }
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', function() {
+    if (studyTimer) {
+        clearInterval(studyTimer);
+    }
+    
+    // Update session data
+    fetch('/api/session/update', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `session_id={{ session.id }}&activity_data=${JSON.stringify({
+            pages_viewed: Array.from(pagesViewed),
+            total_pages: totalPagesCount,
+            time_spent: Math.floor((new Date() - startTime) / 60000)
+        })}`,
+        credentials: 'include'
+    });
+});
+</script>
+{% endblock %}

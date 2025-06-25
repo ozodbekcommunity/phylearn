@@ -1,0 +1,558 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} - {{ section.module.title }} - PhyLearn{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Breadcrumb -->
+        <nav class="flex mb-6" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                        </svg>
+                        Talaba Paneli
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <a href="/module/{{ section.module.id }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
+                            {{ section.module.title }}
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">{{ section.title }}</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-green-600 to-blue-600 rounded-xl shadow-lg text-white p-6 mb-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold flex items-center">
+                        <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                        {{ section.title }}
+                    </h1>
+                    <p class="mt-1 opacity-90">Yakuniy test - bilimlaringizni tekshiring</p>
+                </div>
+                <div class="mt-4 md:mt-0 text-center">
+                    <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+                        <div class="text-2xl font-bold font-mono" id="timer">--:--</div>
+                        <div class="text-sm opacity-80">Qolgan vaqt</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Instructions -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-yellow-200 dark:border-yellow-800 mb-6">
+            <div class="px-6 py-4 bg-yellow-50 dark:bg-yellow-900/20 border-b border-yellow-200 dark:border-yellow-800 rounded-t-xl">
+                <h3 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Test bo'yicha yo'riqnomalar
+                </h3>
+            </div>
+            <div class="p-6">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-white">Bajarish vaqti: <span class="text-green-600">30 daqiqa</span></p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-white">Jami savollar: <span class="text-green-600">{{ questions|length }}</span></p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-white">O'tish uchun: <span class="text-green-600">70%</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-yellow-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                            <div>
+                                <p class="text-gray-700 dark:text-gray-300">Har bir savol bitta to'g'ri javobga ega</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-yellow-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                            <div>
+                                <p class="text-gray-700 dark:text-gray-300">Yuborish keyin natijani o'zgartirish mumkin emas</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-yellow-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                            <div>
+                                <p class="text-gray-700 dark:text-gray-300">Test davomida sahifani yopmang</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Form -->
+        {% if questions %}
+        <form id="testForm" class="hidden">
+            <div class="space-y-6">
+                {% for question in questions %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden question-card" data-question="{{ loop.index }}">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200 text-sm font-bold mr-3">
+                                {{ loop.index }}
+                            </span>
+                            Savol {{ loop.index }} / {{ questions|length }}
+                        </h3>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">
+                            {{ question.points }} {% if question.points == 1 %}ball{% else %}ball{% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6 border-l-4 border-blue-500">
+                            <div class="text-gray-900 dark:text-white">
+                                {{ question.question_text|safe }}
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            {% for option in question.options_data %}
+                            <label class="flex items-start p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                                <input type="radio" 
+                                       name="question_{{ question.id }}" 
+                                       value="{{ option.value if option.value else option }}"
+                                       class="mt-1 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600">
+                                <span class="ml-3 text-gray-900 dark:text-white">
+                                    {{ option.text if option.text else option }}
+                                </span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Submit Test -->
+            <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                <button type="button" onclick="saveProgress()" 
+                        class="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                    </svg>
+                    Progressni saqlash
+                </button>
+                <button type="submit" 
+                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Testni yakunlash
+                </button>
+            </div>
+        </form>
+        
+        <!-- Start Test Button -->
+        <div id="startTestContainer" class="text-center">
+            <button onclick="startTest()" 
+                    class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors hover-lift">
+                <svg class="w-6 h-6 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Testni boshlash
+            </button>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-3">
+                Tugmani bosganda vaqt hisoblagichi ishga tushadi
+            </p>
+        </div>
+        
+        {% else %}
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Test hali tayyor emas</h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Administrator tez orada savollarni qo'shadi</p>
+            </div>
+        {% endif %}
+        
+        <!-- Progress Indicator -->
+        <div id="progressContainer" class="hidden mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    Test progressi
+                </h3>
+                <span id="progressText" class="text-sm text-gray-500 dark:text-gray-400">0/{{ questions|length }}</span>
+            </div>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                <div id="testProgress" class="bg-green-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Results Modal -->
+<div id="resultsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-lg shadow-lg rounded-xl bg-white dark:bg-gray-800">
+        <div class="mt-3">
+            <div class="text-center">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                    <svg class="inline w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                    Test natijalari
+                </h3>
+                <div id="resultsContent">
+                    <!-- Results will be loaded here -->
+                </div>
+                <div class="mt-6">
+                    <button onclick="goToModule()" 
+                            class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                        <svg class="inline w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Modulga qaytish
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let testTimer = null;
+let timeLeft = 30 * 60; // 30 minutes in seconds
+let testStarted = false;
+let autoSaveInterval = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if test was already started
+    const savedProgress = localStorage.getItem('test_{{ section.id }}_progress');
+    if (savedProgress) {
+        const confirmed = confirm('Sizda saqlangan progress mavjud. Testni davom ettirasizmi?');
+        if (confirmed) {
+            loadProgress();
+            continueTest();
+        } else {
+            localStorage.removeItem('test_{{ section.id }}_progress');
+            localStorage.removeItem('test_{{ section.id }}_time');
+        }
+    }
+    
+    setupFormHandlers();
+});
+
+function startTest() {
+    testStarted = true;
+    
+    // Hide start button, show test form
+    document.getElementById('startTestContainer').classList.add('hidden');
+    document.getElementById('testForm').classList.remove('hidden');
+    document.getElementById('progressContainer').classList.remove('hidden');
+    
+    // Start timer
+    const savedTime = localStorage.getItem('test_{{ section.id }}_time');
+    if (savedTime) {
+        timeLeft = parseInt(savedTime);
+    }
+    
+    startTimer();
+    updateProgress();
+    
+    // Auto-save every 30 seconds
+    autoSaveInterval = setInterval(saveProgress, 30000);
+    
+    // Prevent page reload/close
+    window.addEventListener('beforeunload', preventLeave);
+}
+
+function continueTest() {
+    testStarted = true;
+    
+    document.getElementById('startTestContainer').classList.add('hidden');
+    document.getElementById('testForm').classList.remove('hidden');
+    document.getElementById('progressContainer').classList.remove('hidden');
+    
+    const savedTime = localStorage.getItem('test_{{ section.id }}_time');
+    if (savedTime) {
+        timeLeft = parseInt(savedTime);
+    }
+    
+    startTimer();
+    updateProgress();
+    
+    autoSaveInterval = setInterval(saveProgress, 30000);
+    window.addEventListener('beforeunload', preventLeave);
+}
+
+function startTimer() {
+    testTimer = setInterval(function() {
+        timeLeft--;
+        updateTimerDisplay();
+        
+        // Save time to localStorage
+        localStorage.setItem('test_{{ section.id }}_time', timeLeft.toString());
+        
+        if (timeLeft <= 0) {
+            timeUp();
+        }
+    }, 1000);
+    
+    updateTimerDisplay();
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    document.getElementById('timer').textContent = display;
+    
+    // Change color when time is running out
+    const timerElement = document.getElementById('timer');
+    if (timeLeft < 300) { // Less than 5 minutes
+        timerElement.className = 'text-2xl font-bold font-mono text-red-300';
+    } else if (timeLeft < 600) { // Less than 10 minutes
+        timerElement.className = 'text-2xl font-bold font-mono text-yellow-300';
+    } else {
+        timerElement.className = 'text-2xl font-bold font-mono';
+    }
+}
+
+function setupFormHandlers() {
+    // Track answer changes
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            updateProgress();
+            saveProgress();
+        });
+    });
+    
+    // Form submission
+    document.getElementById('testForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitTest();
+    });
+}
+
+function updateProgress() {
+    const totalQuestions = {{ questions|length }};
+    const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+    const progress = (answeredQuestions / totalQuestions) * 100;
+    
+    document.getElementById('testProgress').style.width = progress + '%';
+    document.getElementById('progressText').textContent = `${answeredQuestions}/${totalQuestions}`;
+}
+
+function saveProgress() {
+    if (!testStarted) return;
+    
+    const formData = new FormData(document.getElementById('testForm'));
+    const progress = {};
+    
+    for (let [key, value] of formData.entries()) {
+        progress[key] = value;
+    }
+    
+    localStorage.setItem('test_{{ section.id }}_progress', JSON.stringify(progress));
+    showToast('Progress saqlandi', 'info');
+}
+
+function loadProgress() {
+    const savedProgress = localStorage.getItem('test_{{ section.id }}_progress');
+    if (!savedProgress) return;
+    
+    const progress = JSON.parse(savedProgress);
+    
+    for (let [key, value] of Object.entries(progress)) {
+        const input = document.querySelector(`input[name="${key}"][value="${value}"]`);
+        if (input) {
+            input.checked = true;
+        }
+    }
+    
+    updateProgress();
+}
+
+function timeUp() {
+    clearInterval(testTimer);
+    showToast('Vaqt tugadi! Test avtomatik yuboriladi.', 'warning');
+    setTimeout(() => {
+        submitTest();
+    }, 2000);
+}
+
+async function submitTest() {
+    if (!confirm('Testni yakunlashni xohlaysizmi? Javoblarni o\'zgartirib bo\'lmaydi.')) {
+        return;
+    }
+    
+    // Stop timer and auto-save
+    if (testTimer) clearInterval(testTimer);
+    if (autoSaveInterval) clearInterval(autoSaveInterval);
+    
+    // Disable form
+    const form = document.getElementById('testForm');
+    const inputs = form.querySelectorAll('input, button');
+    inputs.forEach(input => input.disabled = true);
+    
+    try {
+        const formData = new FormData(form);
+        const answers = {};
+        
+        // Prepare answers data
+        {% for question in questions %}
+        const q{{ question.id }} = formData.get('question_{{ question.id }}');
+        if (q{{ question.id }}) {
+            answers[{{ question.id }}] = q{{ question.id }};
+        }
+        {% endfor %}
+        
+        // Submit each answer
+        let correctAnswers = 0;
+        const totalQuestions = {{ questions|length }};
+        
+        for (let [questionId, answer] of Object.entries(answers)) {
+            const response = await fetch('/answer/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `question_id=${questionId}&answer_text=${encodeURIComponent(answer)}`,
+                credentials: 'include'
+            });
+            
+            const data = await response.json();
+            // Count correct answers (this would be determined server-side)
+        }
+        
+        // Complete section
+        await fetch('/section/{{ section.id }}/complete', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        
+        // Clear saved progress
+        localStorage.removeItem('test_{{ section.id }}_progress');
+        localStorage.removeItem('test_{{ section.id }}_time');
+        
+        // Show results
+        showTestResults();
+        
+    } catch (error) {
+        showToast('Test yuborishda xatolik: ' + error.message, 'danger');
+        // Re-enable form
+        inputs.forEach(input => input.disabled = false);
+    }
+}
+
+function showTestResults() {
+    // This would fetch actual results from server
+    // For now, showing a placeholder
+    const resultsHtml = `
+        <div class="text-center mb-6">
+            <div class="text-6xl mb-4">
+                <svg class="mx-auto h-16 w-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Test yakunlandi!</h3>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div class="text-2xl font-bold text-primary-600 dark:text-primary-400">85%</div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">Sizning natijangiz</div>
+            </div>
+            <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div class="text-2xl font-bold text-green-600">
+                    <svg class="inline w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                    </svg>
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">Muvaffaqiyatli!</div>
+            </div>
+        </div>
+        
+        <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+                <span>To'g'ri javoblar:</span>
+                <strong>17/20</strong>
+            </div>
+            <div class="flex justify-between">
+                <span>Bajarish vaqti:</span>
+                <strong>23 daqiqa</strong>
+            </div>
+            <div class="flex justify-between">
+                <span>Urinish:</span>
+                <strong>1</strong>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('resultsContent').innerHTML = resultsHtml;
+    document.getElementById('resultsModal').classList.remove('hidden');
+}
+
+function preventLeave(e) {
+    if (testStarted) {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+    }
+}
+
+function goToModule() {
+    window.removeEventListener('beforeunload', preventLeave);
+    window.location.href = '/module/{{ section.module.id }}';
+}
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', function() {
+    if (testStarted && timeLeft > 0) {
+        saveProgress();
+    }
+});
+</script>
+{% endblock %}

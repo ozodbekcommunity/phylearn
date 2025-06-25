@@ -1,0 +1,434 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} - {{ section.module.title }} - PhyLearn{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Breadcrumb -->
+        <nav class="flex mb-6" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                        </svg>
+                        Talaba Paneli
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <a href="/module/{{ section.module.id }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
+                            {{ section.module.title }}
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">{{ section.title }}</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Header -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
+                        {% if section.section_type == 'tasks' %}
+                            <svg class="w-8 h-8 mr-3 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                            </svg>
+                        {% elif section.section_type == 'control' %}
+                            <svg class="w-8 h-8 mr-3 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                        {% endif %}
+                        {{ section.title }}
+                    </h1>
+                    <p class="text-gray-600 dark:text-gray-300 mt-1">
+                        {% if section.section_type == 'tasks' %}
+                            Mustaqil vazifalar - yechib, javoblarni yuklang
+                        {% elif section.section_type == 'control' %}
+                            Nazorat savollari - o'qituvchi tekshiruvi talab etiladi
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2">
+                        <div id="sectionProgress" class="bg-primary-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 text-center">
+                        Progress: <span id="progressText">0/{{ questions|length }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions -->
+        {% if questions %}
+            <div class="space-y-6">
+                {% for question in questions %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden" id="question-{{ question.id }}">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200 text-sm font-medium mr-3">
+                                {{ loop.index }}
+                            </span>
+                            Savol {{ loop.index }} / {{ questions|length }}
+                            <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">({{ question.points }} {% if question.points == 1 %}ball{% else %}ball{% endif %})</span>
+                        </h3>
+                        
+                        <!-- Answer Status -->
+                        {% set answer = student_answers.get(question.id) %}
+                        {% if answer %}
+                            {% if answer.is_correct == True %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    To'g'ri
+                                </span>
+                            {% elif answer.is_correct == False %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                    Noto'g'ri
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Tekshiruvda
+                                </span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="p-6">
+                        <!-- Question Text -->
+                        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6 border-l-4 border-blue-500">
+                            <div class="text-gray-900 dark:text-white">
+                                {{ question.question_text|safe }}
+                            </div>
+                        </div>
+                        
+                        <!-- Answer Form -->
+                        <form class="answer-form space-y-4" data-question-id="{{ question.id }}">
+                            {% if question.question_type == 'text' %}
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sizning javobingiz:</label>
+                                    <textarea name="answer_text" rows="6" 
+                                              placeholder="Batafsil javobni formulalar va hisob-kitoblar bilan kiriting..."
+                                              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">{{ answer.answer_text if answer else '' }}</textarea>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                        Yechimni formulalar va hisob-kitoblar bilan batafsil tasvirlang
+                                    </p>
+                                </div>
+                            {% elif question.question_type == 'file' %}
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Yechim faylini yuklang:</label>
+                                    <input type="file" name="file" accept=".pdf,.doc,.docx,.jpg,.png,.txt"
+                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
+                                    {% if answer and answer.file_path %}
+                                        <div class="mt-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                                            <p class="text-sm text-green-800 dark:text-green-200 flex items-center">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                Fayl yuklangan: 
+                                                <a href="/{{ answer.file_path }}" target="_blank" class="ml-1 underline hover:no-underline">
+                                                    Ko'rish
+                                                </a>
+                                            </p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Yechim haqida izoh:</label>
+                                    <textarea name="answer_text" rows="3" 
+                                              placeholder="Yechimingizni tasvirlang..."
+                                              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">{{ answer.answer_text if answer else '' }}</textarea>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Action Buttons -->
+                            <div class="flex flex-col sm:flex-row justify-between gap-4">
+                                <div class="flex gap-2">
+                                    <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                        </svg>
+                                        Javobni yuborish
+                                    </button>
+                                    {% if answer and answer.is_correct != True %}
+                                        <button type="button" onclick="getHint({{ question.id }})" 
+                                                class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                            </svg>
+                                            Maslahat
+                                        </button>
+                                    {% endif %}
+                                </div>
+                                
+                                {% if answer %}
+                                    <button type="button" onclick="showFeedback({{ answer.id }})" 
+                                            class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                        </svg>
+                                        Fikr-mulohaza
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </form>
+                        
+                        <!-- AI Feedback Display -->
+                        <div id="feedback-{{ question.id }}" class="hidden mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <!-- Feedback will be loaded here -->
+                        </div>
+                        
+                        <!-- Hint Display -->
+                        <div id="hint-{{ question.id }}" class="hidden mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                            <h5 class="font-medium text-blue-900 dark:text-blue-100 flex items-center mb-2">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                </svg>
+                                Maslahat:
+                            </h5>
+                            <div class="hint-content text-blue-800 dark:text-blue-200"></div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Complete Section Button -->
+            <div class="mt-8 text-center">
+                <button onclick="completeSection()" id="completeSectionBtn" disabled 
+                        class="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg text-lg font-medium transition-colors flex items-center mx-auto">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Bo'limni yakunlash
+                </button>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                    Bo'limni yakunlash uchun barcha savollarga javob bering
+                </p>
+            </div>
+        {% else %}
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Savollar qo'shilmagan</h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Administrator tez orada vazifalarni qo'shadi</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize TinyMCE for rich text editing
+    if (typeof tinymce !== 'undefined') {
+        tinymce.init({
+            selector: 'textarea[name="answer_text"]',
+            height: 200,
+            menubar: false,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+            ],
+            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | link image | code',
+            content_css: [
+                'https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap'
+            ],
+            font_family_formats: 'Outfit=Outfit,sans-serif;Arial=arial,helvetica,sans-serif;',
+            setup: function(editor) {
+                editor.on('change', function() {
+                    updateProgress();
+                });
+            }
+        });
+    }
+    
+    // Initialize progress
+    updateProgress();
+    
+    // Setup form submissions
+    setupFormSubmissions();
+});
+
+function setupFormSubmissions() {
+    document.querySelectorAll('.answer-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitAnswer(this);
+        });
+    });
+}
+
+async function submitAnswer(form) {
+    const questionId = form.getAttribute('data-question-id');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    
+    // Disable button and show loading
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Yuborilmoqda...';
+    
+    try {
+        const formData = new FormData(form);
+        formData.append('question_id', questionId);
+        
+        const response = await fetch('/answer/submit', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            showToast('Javob muvaffaqiyatli saqlandi', 'success');
+            
+            // Update the page to show new status
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        } else {
+            showToast(data.message || 'Javobni yuborishda xatolik', 'danger');
+        }
+    } catch (error) {
+        showToast('Ulanish xatosi: ' + error.message, 'danger');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+    }
+}
+
+async function getHint(questionId) {
+    try {
+        const response = await fetch(`/hint/${questionId}`, {
+            credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            const hintDiv = document.getElementById(`hint-${questionId}`);
+            hintDiv.querySelector('.hint-content').textContent = data.hint;
+            hintDiv.classList.remove('hidden');
+        } else {
+            showToast(data.message || 'Maslahat olishda xatolik', 'warning');
+        }
+    } catch (error) {
+        showToast('Maslahat olishda xatolik: ' + error.message, 'danger');
+    }
+}
+
+async function showFeedback(answerId) {
+    try {
+        const response = await fetch(`/answer/${answerId}/feedback`, {
+            credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            const feedback = data.feedback;
+            const feedbackDiv = document.getElementById(`feedback-${answerId.toString().split('-')[1]}`);
+            
+            let feedbackHtml = '<h5 class="font-medium text-gray-900 dark:text-white mb-3 flex items-center">';
+            feedbackHtml += '<svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+            feedbackHtml += '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>';
+            feedbackHtml += '</svg>AI dan fikr-mulohaza:</h5>';
+            
+            if (feedback.feedback) {
+                feedbackHtml += `<p class="mb-3"><strong>Umumiy baho:</strong> ${feedback.feedback}</p>`;
+            }
+            
+            if (feedback.score) {
+                feedbackHtml += `<p class="mb-3"><strong>Ball:</strong> ${feedback.score}/100</p>`;
+            }
+            
+            if (feedback.strengths && feedback.strengths.length > 0) {
+                feedbackHtml += '<p class="font-medium mb-2">Kuchli tomonlar:</p><ul class="list-disc list-inside mb-3 text-gray-700 dark:text-gray-300">';
+                feedback.strengths.forEach(strength => {
+                    feedbackHtml += `<li>${strength}</li>`;
+                });
+                feedbackHtml += '</ul>';
+            }
+            
+            if (feedback.recommendations && feedback.recommendations.length > 0) {
+                feedbackHtml += '<p class="font-medium mb-2">Tavsiyalar:</p><ul class="list-disc list-inside text-gray-700 dark:text-gray-300">';
+                feedback.recommendations.forEach(rec => {
+                    feedbackHtml += `<li>${rec}</li>`;
+                });
+                feedbackHtml += '</ul>';
+            }
+            
+            feedbackDiv.innerHTML = feedbackHtml;
+            feedbackDiv.classList.remove('hidden');
+        } else {
+            showToast('Fikr-mulohaza hali mavjud emas', 'info');
+        }
+    } catch (error) {
+        showToast('Fikr-mulohaza yuklashda xatolik: ' + error.message, 'danger');
+    }
+}
+
+function updateProgress() {
+    const answeredQuestions = document.querySelectorAll('.bg-green-100, .bg-red-100, .bg-yellow-100').length;
+    const totalQuestions = {{ questions|length }};
+    const progress = (answeredQuestions / totalQuestions) * 100;
+    
+    document.getElementById('sectionProgress').style.width = progress + '%';
+    document.getElementById('progressText').textContent = `${answeredQuestions}/${totalQuestions}`;
+    
+    // Enable complete button if all questions answered
+    if (answeredQuestions >= totalQuestions * 0.8) { // 80% threshold
+        document.getElementById('completeSectionBtn').disabled = false;
+    }
+}
+
+async function completeSection() {
+    const confirmed = confirm('Ushbu bo\'limni yakunlashni xohlaysizmi?');
+    if (!confirmed) return;
+    
+    try {
+        const response = await fetch('/section/{{ section.id }}/complete', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            showToast('Bo\'lim muvaffaqiyatli yakunlandi!', 'success');
+            setTimeout(() => {
+                window.location.href = '/module/{{ section.module.id }}';
+            }, 2000);
+        } else {
+            showToast(data.message || 'Bo\'limni yakunlashda xatolik', 'danger');
+        }
+    } catch (error) {
+        showToast('Ulanish xatosi: ' + error.message, 'danger');
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,405 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} - {{ section.module.title }} - PhyLearn{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Breadcrumb -->
+        <nav class="flex mb-6" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                        </svg>
+                        Talaba Paneli
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <a href="/module/{{ section.module.id }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">
+                            {{ section.module.title }}
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">{{ section.title }}</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Header -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
+                        {% if section.section_type == 'theory' %}
+                            <svg class="w-8 h-8 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        {% elif section.section_type == 'examples' %}
+                            <svg class="w-8 h-8 mr-3 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        {% endif %}
+                        {{ section.title }}
+                    </h1>
+                    <p class="text-gray-600 dark:text-gray-300 mt-1">{{ section.module.title }}</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <button onclick="completeSection()" id="completeBtn" 
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Bo'limni yakunlash
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PDF Viewer -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex flex-col md:flex-row items-start md:items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    O'rganish materiali
+                </h3>
+                <div class="flex items-center space-x-2 mt-4 md:mt-0">
+                    <button onclick="previousPage()" id="prevBtn" 
+                            class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    <button id="pageInfo" disabled 
+                            class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700">
+                        1 / 1
+                    </button>
+                    <button onclick="nextPage()" id="nextBtn" 
+                            class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                    <button onclick="zoomOut()" 
+                            class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"></path>
+                        </svg>
+                    </button>
+                    <button onclick="zoomIn()" 
+                            class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                        </svg>
+                    </button>
+                    {% if section.file_path %}
+                    <a href="/{{ section.file_path }}" download 
+                       class="px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md text-sm font-medium flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Yuklab olish
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-900 min-h-[600px]">
+                {% if section.file_path %}
+                    <div id="pdfContainer" class="flex items-center justify-center min-h-[600px]">
+                        <div id="loadingSpinner" class="flex flex-col items-center justify-center">
+                            <svg class="animate-spin h-8 w-8 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <div class="mt-4 text-center">
+                                <p class="text-gray-900 dark:text-white font-medium">PDF fayl yuklanmoqda...</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Bu bir necha soniya davom etishi mumkin</p>
+                            </div>
+                        </div>
+                        <canvas id="pdfCanvas" class="hidden max-w-full h-auto border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg"></canvas>
+                    </div>
+                {% else %}
+                    <div class="flex flex-col items-center justify-center min-h-[600px] text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">PDF fayl topilmadi</h3>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Material yuklash uchun administratorga murojaat qiling</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Reading Progress -->
+        <div class="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                O'qish progressi
+            </h3>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-4">
+                <div id="readingProgress" class="bg-green-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                <span>O'qilgan sahifalar: <span id="pagesRead" class="font-medium">0</span></span>
+                <span>O'rganish vaqti: <span id="studyTime" class="font-medium">0 daqiqa</span></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// PDF.js setup
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// Global variables
+let pdfDoc = null;
+let currentPage = 1;
+let totalPages = 1;
+let scale = 1.0;
+let startTime = new Date();
+let pagesViewed = new Set();
+let studyTimer = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    {% if section.file_path %}
+        loadPDF('/{{ section.file_path }}');
+    {% endif %}
+    
+    // Start study time tracking
+    updateStudyTime();
+    studyTimer = setInterval(updateStudyTime, 60000); // Update every minute
+});
+
+async function loadPDF(url) {
+    try {
+        console.log('📄 PDF fayl yuklanmoqda:', url);
+        
+        // Show spinner
+        document.getElementById('loadingSpinner').classList.remove('hidden');
+        document.getElementById('pdfCanvas').classList.add('hidden');
+        
+        // Load file as ArrayBuffer
+        const response = await fetch(url);
+        
+        console.log('📡 Server javobi:', response.status, response.statusText);
+        console.log('📦 Content-Type:', response.headers.get('content-type'));
+        console.log('📏 Content-Length:', response.headers.get('content-length'));
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const arrayBuffer = await response.arrayBuffer();
+        console.log('📦 Fayl yuklandi, hajmi:', arrayBuffer.byteLength, 'bayt');
+        
+        if (arrayBuffer.byteLength === 0) {
+            throw new Error('PDF fayl bo\'sh, ya\'ni hajmi nol bayt.');
+        }
+        
+        const typedArray = new Uint8Array(arrayBuffer);
+        
+        // Check PDF header
+        const header = new TextDecoder().decode(typedArray.slice(0, 8));
+        console.log('📋 PDF sarlavhasi:', header);
+        
+        if (!header.startsWith('%PDF')) {
+            throw new Error('Fayl to\'g\'ri PDF emas (noto\'g\'ri sarlavha)');
+        }
+        
+        // Load PDF through PDF.js
+        const loadingTask = pdfjsLib.getDocument(typedArray);
+        pdfDoc = await loadingTask.promise;
+        totalPages = pdfDoc.numPages;
+        
+        console.log('📚 PDF yuklandi, sahifalar:', totalPages);
+        
+        // Hide spinner, show canvas
+        document.getElementById('loadingSpinner').classList.add('hidden');
+        document.getElementById('pdfCanvas').classList.remove('hidden');
+        
+        // Render first page
+        await renderPage(currentPage);
+        
+        // Update controls
+        updateControls();
+        
+    } catch (error) {
+        console.error('❌ PDF yuklashda xatolik:', error);
+        document.getElementById('loadingSpinner').innerHTML = `
+            <div class="max-w-md mx-auto bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800 dark:text-red-200">PDF faylni yuklashda xatolik</h3>
+                        <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+                            <p><strong>Sabab:</strong> ${error.message}</p>
+                        </div>
+                        <div class="mt-4">
+                            <div class="text-sm">
+                                <p class="text-red-700 dark:text-red-300">Sahifani yangilashga harakat qiling yoki administratorga murojaat qiling.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+async function renderPage(pageNumber) {
+    try {
+        console.log('🖼️ Sahifa render qilinmoqda:', pageNumber);
+        
+        const page = await pdfDoc.getPage(pageNumber);
+        const canvas = document.getElementById('pdfCanvas');
+        const context = canvas.getContext('2d');
+        
+        // Setup viewport with scale
+        const viewport = page.getViewport({ scale: scale });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        
+        // Render page
+        const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+        };
+        
+        await page.render(renderContext).promise;
+        
+        // Mark page as viewed
+        pagesViewed.add(pageNumber);
+        updateProgress();
+        updateControls();
+        
+        console.log('✅ Sahifa render qilindi');
+        
+    } catch (error) {
+        console.error('❌ Sahifa render qilishda xatolik:', error);
+    }
+}
+
+function nextPage() {
+    if (currentPage < totalPages) {
+        currentPage++;
+        renderPage(currentPage);
+    }
+}
+
+function previousPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        renderPage(currentPage);
+    }
+}
+
+function zoomIn() {
+    scale *= 1.2;
+    renderPage(currentPage);
+}
+
+function zoomOut() {
+    if (scale > 0.5) {
+        scale /= 1.2;
+        renderPage(currentPage);
+    }
+}
+
+function updateControls() {
+    document.getElementById('pageInfo').textContent = `${currentPage} / ${totalPages}`;
+    document.getElementById('prevBtn').disabled = (currentPage <= 1);
+    document.getElementById('nextBtn').disabled = (currentPage >= totalPages);
+}
+
+function updateProgress() {
+    const progress = (pagesViewed.size / totalPages) * 100;
+    document.getElementById('readingProgress').style.width = progress + '%';
+    document.getElementById('pagesRead').textContent = pagesViewed.size;
+    
+    // Auto-complete when 80% of pages viewed
+    if (progress >= 80) {
+        const completeBtn = document.getElementById('completeBtn');
+        completeBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+        completeBtn.classList.add('bg-yellow-600', 'hover:bg-yellow-700');
+        completeBtn.innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Yakunlashga tayyor';
+    }
+}
+
+function updateStudyTime() {
+    const now = new Date();
+    const diffMinutes = Math.floor((now - startTime) / 60000);
+    document.getElementById('studyTime').textContent = diffMinutes + ' daqiqa';
+}
+
+async function completeSection() {
+    if (pagesViewed.size < totalPages * 0.5) {
+        showToast('Iltimos, bo\'limni yakunlashdan oldin ko\'proq materiallarni o\'rganing (kamida 50% sahifalar)', 'warning');
+        return;
+    }
+    
+    const confirmed = confirm('Ushbu bo\'limni yakunlashni xohlaysizmi?');
+    if (!confirmed) return;
+    
+    try {
+        const response = await fetch('/section/{{ section.id }}/complete', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            showToast('Bo\'lim muvaffaqiyatli yakunlandi!', 'success');
+            setTimeout(() => {
+                window.location.href = '/module/{{ section.module.id }}';
+            }, 1000);
+        } else {
+            showToast(data.message || 'Bo\'limni yakunlashda xatolik', 'danger');
+        }
+    } catch (error) {
+        showToast('Ulanish xatosi: ' + error.message, 'danger');
+    }
+}
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', function() {
+    if (studyTimer) {
+        clearInterval(studyTimer);
+    }
+    
+    // Update session data
+    fetch('/api/session/update', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `session_id={{ session.id }}&activity_data=${JSON.stringify({
+            pages_viewed: Array.from(pagesViewed),
+            total_pages: totalPages,
+            time_spent: Math.floor((new Date() - startTime) / 60000)
+        })}`,
+        credentials: 'include'
+    });
+});
+</script>
+{% endblock %}

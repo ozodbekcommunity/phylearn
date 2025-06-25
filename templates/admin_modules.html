@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+
+{% block title %}Modullarni boshqarish - PhyLearn{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <nav class="flex mb-4" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="/admin" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Admin panel
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">Modullar</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+        
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center">
+                    <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                    Modullarni boshqarish
+                </h1>
+                <p class="text-gray-600 dark:text-gray-400">O'quv modullarini yarating va tahrirlang</p>
+            </div>
+            <button onclick="showCreateModuleModal()" class="mt-4 sm:mt-0 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Modul yaratish
+            </button>
+        </div>
+    </div>
+    
+    <!-- Success/Error Messages -->
+    {% if success %}
+    <div class="mb-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 px-4 py-3 rounded-lg flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        {{ success }}
+        <button onclick="this.parentElement.remove()" class="ml-auto">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+    {% endif %}
+    
+    {% if error %}
+    <div class="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        {{ error }}
+        <button onclick="this.parentElement.remove()" class="ml-auto">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+    {% endif %}
+    
+    <!-- Modules List -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                </svg>
+                Modullar ro'yxati
+            </h2>
+            <span class="text-sm text-gray-500 dark:text-gray-400">{{ modules|length }} modul</span>
+        </div>
+        
+        <div class="p-6">
+            {% if modules %}
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tartib</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Nomi</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tavsif</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Bo'limlar</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Talabalar</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Holat</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Yaratilgan</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            {% for module in modules %}
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200">
+                                        {{ module.order_index }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">{{ module.title }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">
+                                        {{ module.description[:50] }}{% if module.description|length > 50 %}...{% endif %}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                        {{ module.sections|length }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                        {{ module.student_progress|length }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if module.is_active %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Faol</span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Nofaol</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                    {{ module.created_at.strftime('%d.%m.%Y') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex items-center space-x-2">
+                                        <a href="/admin/module/{{ module.id }}/sections" class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-200" title="Bo'limlar">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                                            </svg>
+                                        </a>
+                                        <button onclick="editModule({{ module.id }})" class="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200" title="Tahrirlash">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                            </svg>
+                                        </button>
+                                        <button onclick="toggleModule({{ module.id }})" class="text-yellow-600 hover:text-yellow-800 dark:text-yellow-400 dark:hover:text-yellow-200" title="Faollashtirish/O'chirish">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                                            </svg>
+                                        </button>
+                                        <button onclick="deleteModule({{ module.id }})" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200" title="O'chirish">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-12">
+                    <div class="text-gray-400 dark:text-gray-500 text-6xl mb-4">
+                        <svg class="mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="72" height="72">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">Modullar yaratilmagan</h3>
+                    <p class="text-gray-500 dark:text-gray-400 mt-2 mb-4">Ish boshlash uchun birinchi modulni yarating</p>
+                    <button onclick="showCreateModuleModal()" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg flex items-center mx-auto">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Modul yaratish
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Create Module Modal -->
+<div id="createModuleModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 m-4 max-w-2xl w-full max-h-screen overflow-y-auto">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Yangi modul yaratish
+            </h3>
+            <button onclick="closeCreateModuleModal()" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <form action="/admin/modules/create" method="post" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="md:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Modul nomi</label>
+                    <input type="text" name="title" required 
+                           placeholder="Masalan: Elektr asoslari"
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tartib raqami</label>
+                    <input type="number" name="order_index" value="{{ (modules|length) + 1 }}" required
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Modul tavsifi</label>
+                <textarea name="description" rows="4" required
+                          placeholder="Talabalar ushbu modulda nimani o'rganishlari haqida batafsil tavsif..."
+                          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"></textarea>
+            </div>
+            
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <h4 class="font-medium text-blue-800 dark:text-blue-300 mb-2 flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Modul tuzilishi
+                </h4>
+                <p class="text-sm text-blue-700 dark:text-blue-300 mb-3">Modul yaratgandan keyin 5 turdagi bo'limlar qo'shishingiz mumkin:</p>
+                <ol class="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                    <li><strong>1. Nazariya</strong> - O'rganish uchun PDF materiallar</li>
+                    <li><strong>2. Masala misollari</strong> - Yechilgan misollar</li>
+                    <li><strong>3. Mustaqil masalalar</strong> - Talabalar uchun topshiriqlar</li>
+                    <li><strong>4. Nazorat savollari</strong> - Tushunishni tekshirish</li>
+                    <li><strong>5. Testlash</strong> - Yakuniy attestatsiya</li>
+                </ol>
+            </div>
+            
+            <div class="flex justify-end space-x-3 pt-4">
+                <button type="button" onclick="closeCreateModuleModal()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
+                    Bekor qilish
+                </button>
+                <button type="submit" class="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Modul yaratish
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Module Modal -->
+<div id="editModuleModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 m-4 max-w-2xl w-full">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                </svg>
+                Modulni tahrirlash
+            </h3>
+            <button onclick="closeEditModuleModal()" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <form id="editModuleForm" class="space-y-4">
+            <input type="hidden" name="module_id" id="editModuleId">
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="md:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Modul nomi</label>
+                    <input type="text" name="title" id="editTitle" required
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tartib raqami</label>
+                    <input type="number" name="order_index" id="editOrderIndex" required
+                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Modul tavsifi</label>
+                <textarea name="description" id="editDescription" rows="4" required
+                          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"></textarea>
+            </div>
+            
+            <div class="flex items-center">
+                <input id="editIsActive" name="is_active" type="checkbox" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                <label for="editIsActive" class="ml-2 block text-sm text-gray-900 dark:text-gray-300">
+                    Modul faol (talabalarga ochiq)
+                </label>
+            </div>
+            
+            <div class="flex justify-end space-x-3 pt-4">
+                <button type="button" onclick="closeEditModuleModal()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
+                    Bekor qilish
+                </button>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    O'zgarishlarni saqlash
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function showCreateModuleModal() {
+    document.getElementById('createModuleModal').classList.remove('hidden');
+    document.getElementById('createModuleModal').classList.add('flex');
+}
+
+function closeCreateModuleModal() {
+    document.getElementById('createModuleModal').classList.add('hidden');
+    document.getElementById('createModuleModal').classList.remove('flex');
+}
+
+function showEditModuleModal() {
+    document.getElementById('editModuleModal').classList.remove('hidden');
+    document.getElementById('editModuleModal').classList.add('flex');
+}
+
+function closeEditModuleModal() {
+    document.getElementById('editModuleModal').classList.add('hidden');
+    document.getElementById('editModuleModal').classList.remove('flex');
+}
+
+async function editModule(moduleId) {
+    try {
+        // Haqiqiy ilovada bu API dan modul ma'lumotlarini oladi
+        showEditModuleModal();
+        document.getElementById('editModuleId').value = moduleId;
+    } catch (error) {
+        showToast('Modul ma\'lumotlarini yuklashda xatolik', 'danger');
+    }
+}
+
+async function deleteModule(moduleId) {
+    if (!confirm('Siz haqiqatan ham ushbu modulni o\'chirmoqchimisiz? Bu amal bekor qilinmaydi.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/admin/modules/${moduleId}/delete`, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            showToast('Modul muvaffaqiyatli o\'chirildi', 'success');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showToast('Modulni o\'chirishda xatolik', 'danger');
+        }
+    } catch (error) {
+        showToast('Ulanish xatosi: ' + error.message, 'danger');
+    }
+}
+
+async function toggleModule(moduleId) {
+    try {
+        const response = await fetch(`/admin/modules/${moduleId}/toggle`, {
+            method: 'POST',
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            showToast('Modul holati o\'zgartirildi', 'success');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showToast('Holatni o\'zgartirishda xatolik', 'danger');
+        }
+    } catch (error) {
+        showToast('Ulanish xatosi: ' + error.message, 'danger');
+    }
+}
+
+// Edit form submission
+document.getElementById('editModuleForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const moduleId = formData.get('module_id');
+    
+    try {
+        const response = await fetch(`/admin/modules/${moduleId}/update`, {
+            method: 'PUT',
+            body: formData,
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            showToast('Modul muvaffaqiyatli yangilandi', 'success');
+            closeEditModuleModal();
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showToast('Modulni yangilashda xatolik', 'danger');
+        }
+    } catch (error) {
+        showToast('Ulanish xatosi: ' + error.message, 'danger');
+    }
+});
+
+// Close modals when clicking outside
+document.getElementById('createModuleModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeCreateModuleModal();
+    }
+});
+
+document.getElementById('editModuleModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeEditModuleModal();
+    }
+});
+</script>
+{% endblock %}

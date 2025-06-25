@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Sertifikatni tekshirish{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-16">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            {% if error %}
+                <div class="text-center p-12">
+                    <div class="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">{{ error }}</h2>
+                    <p class="text-gray-600 dark:text-gray-400">Iltimos, sertifikat ID sini to'g'ri kiritganingizni tekshiring</p>
+                </div>
+            {% else %}
+                <div class="bg-gradient-to-r from-green-500 to-blue-600 p-6 text-white text-center">
+                    <h2 class="text-2xl font-bold flex items-center justify-center">
+                        <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        Sertifikat tasdiqlandi
+                    </h2>
+                </div>
+                
+                <div class="p-8">
+                    <div class="text-center mb-8">
+                        <div class="w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-10 h-10 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <h3 class="text-2xl font-bold text-center text-gray-900 dark:text-white">{{ student.full_name }}</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                                <span class="text-gray-600 dark:text-gray-400 font-medium">Sertifikat ID:</span>
+                                <code class="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded text-sm">{{ certificate.certificate_id }}</code>
+                            </div>
+                            
+                            <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                                <span class="text-gray-600 dark:text-gray-400 font-medium">Kurs:</span>
+                                <span class="text-gray-900 dark:text-white font-medium">{{ module.title }}</span>
+                            </div>
+                            
+                            <div class="py-3 border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-gray-600 dark:text-gray-400 font-medium">Natija:</span>
+                                    <span class="text-gray-900 dark:text-white font-bold">{{ certificate.overall_score|round(1) }}%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                                    <div class="bg-gradient-to-r from-green-500 to-blue-600 h-3 rounded-full transition-all duration-300" 
+                                         style="width: {{ certificate.overall_score }}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center py-3">
+                                <span class="text-gray-600 dark:text-gray-400 font-medium">Berilgan sana:</span>
+                                <span class="text-gray-900 dark:text-white font-medium">{{ certificate.issued_at.strftime('%d.%m.%Y') }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 text-center">
+                            <a href="/certificate/{{ certificate.certificate_id }}/download" 
+                               class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Sertifikatni yuklab olish
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Verification Info -->
+        <div class="mt-8 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-lg font-medium text-blue-900 dark:text-blue-100 mb-2">Tekshirish haqida</h3>
+                    <div class="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+                        <p>• Bu sertifikat PhyLearn platformasi tomonidan berilgan</p>
+                        <p>• Har bir sertifikat noyob ID ga ega</p>
+                        <p>• Sertifikatning haqiqiyligini ushbu sahifada tekshirish mumkin</p>
+                        <p>• Savollar bo'lsa <a href="mailto:support@phylearn.com" class="underline hover:no-underline">support@phylearn.com</a> ga murojaat qiling</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyVerificationLink() {
+    const url = window.location.href;
+    
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(() => {
+            showToast('Tekshirish havolasi nusxalandi', 'success');
+        }).catch(err => {
+            showToast('Nusxalashda xatolik', 'danger');
+        });
+    } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showToast('Tekshirish havolasi nusxalandi', 'success');
+        } catch (err) {
+            showToast('Nusxalashda xatolik', 'danger');
+        }
+        document.body.removeChild(textArea);
+    }
+}
+</script>
+{% endblock %}

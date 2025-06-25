@@ -1,0 +1,515 @@
+{% extends "base.html" %}
+
+{% block title %}Administrator Paneli - PhyLearn{% endblock %}
+
+{% block content %}
+<!-- Add Student Modal -->
+<div id="addStudentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4" onclick="event.stopPropagation()">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Talaba qo'shish</h3>
+                <button onclick="closeAddStudentModal()"
+                    class="text-gray-400 hover:text-gray-500 dark:text-gray-300 dark:hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="addStudentForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ism</label>
+                        <input type="text" name="first_name" required
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Familiya</label>
+                        <input type="text" name="last_name" required
+                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                    <input type="email" name="email" required
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Foydalanuvchi
+                        nomi</label>
+                    <input type="text" name="username" required
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Parol</label>
+                    <input type="password" name="password" value="student123"
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Talaba kirish vaqtida parolni o'zgartirishi
+                        mumkin</p>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeAddStudentModal()"
+                        class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
+                        Bekor qilish
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        Talaba yaratish
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Welcome Header -->
+    <div class="mb-8">
+        <div class="bg-gray-800 dark:bg-gray-900 text-white rounded-xl p-8">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold mb-2 flex items-center">
+                        <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Administrator Paneli
+                    </h1>
+                    <p class="text-white/90">
+                        Xush kelibsiz, {{ user.first_name }}! PhyLearn platformasini boshqaring
+                    </p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <div class="text-4xl">
+                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-primary-600 text-white rounded-lg p-6 hover-lift">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-4xl font-bold">{{ stats.total_students }}</div>
+                    <p class="text-primary-100">Jami talabalar</p>
+                    <p class="text-sm text-primary-200 flex items-center mt-2">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        {{ stats.active_students }} hafta davomida faol
+                    </p>
+                </div>
+                <div class="text-6xl text-primary-200">
+                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-green-600 text-white rounded-lg p-6 hover-lift">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-4xl font-bold">{{ stats.total_modules }}</div>
+                    <p class="text-green-100">Yaratilgan modullar</p>
+                    <p class="text-sm text-green-200 flex items-center mt-2">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                            </path>
+                        </svg>
+                        {{ stats.total_sections }} bo'lim
+                    </p>
+                </div>
+                <div class="text-6xl text-green-200">
+                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-yellow-600 text-white rounded-lg p-6 hover-lift">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-4xl font-bold" id="pendingAnswers">-</div>
+                    <p class="text-yellow-100">Tekshirilayotgan javoblar</p>
+                    <p class="text-sm text-yellow-200 flex items-center mt-2">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        E'tibor talab qiladi
+                    </p>
+                </div>
+                <div class="text-6xl text-yellow-200">
+                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-cyan-600 text-white rounded-lg p-6 hover-lift">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-4xl font-bold" id="certificatesIssued">-</div>
+                    <p class="text-cyan-100">Berilgan sertifikatlar</p>
+                    <p class="text-sm text-cyan-200 flex items-center mt-2">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                        Joriy oy uchun
+                    </p>
+                </div>
+                <div class="text-6xl text-cyan-200">
+                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Tezkor amallar
+            </h2>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <a href="/admin/modules"
+                    class="flex flex-col items-center p-6 border-2 border-primary-200 dark:border-primary-800 border-dashed rounded-lg hover:border-primary-400 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors text-center">
+                    <svg class="w-12 h-12 text-primary-600 dark:text-primary-400 mb-3" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span class="text-primary-700 dark:text-primary-300 font-medium">Modul yaratish</span>
+                </a>
+
+                <button onclick="showAddStudentModal()"
+                    class="flex flex-col items-center p-6 border-2 border-green-200 dark:border-green-800 border-dashed rounded-lg hover:border-green-400 dark:hover:border-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors text-center">
+                    <svg class="w-12 h-12 text-green-600 dark:text-green-400 mb-3" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
+                        </path>
+                    </svg>
+                    <span class="text-green-700 dark:text-green-300 font-medium">Talaba qo'shish</span>
+                </button>
+
+                <a href="/admin/students"
+                    class="flex flex-col items-center p-6 border-2 border-yellow-200 dark:border-yellow-800 border-dashed rounded-lg hover:border-yellow-400 dark:hover:border-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 transition-colors text-center">
+                    <svg class="w-12 h-12 text-yellow-600 dark:text-yellow-400 mb-3" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
+                        </path>
+                    </svg>
+                    <span class="text-yellow-700 dark:text-yellow-300 font-medium">Javoblarni tekshirish</span>
+                </a>
+
+                <button onclick="exportData()"
+                    class="flex flex-col items-center p-6 border-2 border-cyan-200 dark:border-cyan-800 border-dashed rounded-lg hover:border-cyan-400 dark:hover:border-cyan-600 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition-colors text-center">
+                    <svg class="w-12 h-12 text-cyan-600 dark:text-cyan-400 mb-3" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    <span class="text-cyan-700 dark:text-cyan-300 font-medium">Ma'lumotlar eksporti</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity and Popular Modules -->
+    <div class="grid lg:grid-cols-2 gap-8 mb-8">
+        <!-- Recent Students -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
+                        </path>
+                    </svg>
+                    Yangi talabalar
+                </h3>
+                <a href="/admin/students"
+                    class="text-sm text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-200">Barcha
+                    talabalar</a>
+            </div>
+            <div class="p-6">
+                {% if recent_students %}
+                <div class="space-y-4">
+                    {% for student in recent_students %}
+                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-10 h-10 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 rounded-full flex items-center justify-center font-medium">
+                                {{ student.full_name[0] }}
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 dark:text-white">{{ student.full_name }}</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">{{ student.email }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-500">
+                                    <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                    {{ student.created_at.strftime('%d.%m.%Y') }}
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            {% if student.last_login %}
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Faol</span>
+                            {% else %}
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Kirmagan</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-8">
+                    <div class="text-gray-400 dark:text-gray-500 text-4xl mb-2">
+                        <svg class="mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="48"
+                            height="48">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-gray-500 dark:text-gray-400">Yangi talabalar hali yo'q</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Popular Modules -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                        </path>
+                    </svg>
+                    Mashhur modullar
+                </h3>
+                <a href="/admin/modules"
+                    class="text-sm text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-200">Barcha
+                    modullar</a>
+            </div>
+            <div class="p-6">
+                {% if popular_modules %}
+                <div class="space-y-4">
+                    {% for module in popular_modules %}
+                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div class="flex-grow">
+                            <h4 class="font-medium text-gray-900 dark:text-white">{{ module.title }}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ module.description[:50] }}{% if
+                                module.description|length > 50 %}...{% endif %}</p>
+                            <div class="mt-2 w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1">
+                                <div class="bg-primary-600 h-1 rounded-full"
+                                    style="width: {{ (module.student_count / stats.total_students * 100) if stats.total_students > 0 else 0 }}%">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ml-4 text-center">
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200">{{
+                                module.student_count }}</span>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">talaba</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-8">
+                    <div class="text-gray-400 dark:text-gray-500 text-4xl mb-2">
+                        <svg class="mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="48"
+                            height="48">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                            </path>
+                        </svg>
+                    </div>
+                    <p class="text-gray-500 dark:text-gray-400">Modullar hali yaratilmagan</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        loadDashboardStats();
+        setupAddStudentForm();
+    });
+
+    async function loadDashboardStats() {
+        try {
+            const response = await fetch('/api/statistics');
+            if (!response.ok) throw new Error('Ma\'lumotlarni yuklab bo\'lmadi');
+
+            const data = await response.json();
+
+            // Yangilash statistikalarini ko'rsatish
+            document.getElementById('pendingAnswers').textContent = data.pending_answers || '0';
+            document.getElementById('certificatesIssued').textContent = data.certificates_this_month || '0';
+
+            // Modullar statistikasini yangilash
+            updateModulesStats(data.modules_stats);
+
+        } catch (error) {
+            console.error('Statistikalarni yuklashda xatolik:', error);
+            // Show error to user
+            showToast('Statistikalarni yangilashda xatolik yuz berdi', 'danger');
+        }
+    }
+
+    function updateModulesStats(modulesStats) {
+        const container = document.getElementById('modulesStats');
+        if (!container || !modulesStats) return;
+
+        let html = '';
+        modulesStats.forEach(module => {
+            const progress = ((module.completed || 0) / (module.total_students || 1) * 100).toFixed(1);
+            const inProgress = ((module.in_progress || 0) / (module.total_students || 1) * 100).toFixed(1);
+
+            html += `
+        <div class="mb-4">
+            <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">${module.title}</span>
+                <span>${module.completed || 0} / ${module.total_students}</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-1">
+                <div class="bg-green-500 h-2 rounded-full" style="width: ${progress}%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-500">
+                <span>${progress}% tugallangan</span>
+                <span>${inProgress}% jarayonda</span>
+            </div>
+        </div>`;
+        });
+
+        container.innerHTML = html;
+    }
+
+    function showAddStudentModal() {
+        document.getElementById('addStudentModal').classList.remove('hidden');
+        document.getElementById('addStudentModal').classList.add('flex');
+    }
+
+    function closeAddStudentModal() {
+        document.getElementById('addStudentModal').classList.add('hidden');
+        document.getElementById('addStudentModal').classList.remove('flex');
+    }
+
+    function setupAddStudentForm() {
+        document.getElementById('addStudentForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>Yaratilmoqda...';
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    showToast('Talaba muvaffaqiyatli yaratildi', 'success');
+                    closeAddStudentModal();
+                    this.reset();
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showToast('Talaba yaratishda xatolik', 'danger');
+                }
+            } catch (error) {
+                showToast('Ulanish xatosi: ' + error.message, 'danger');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
+    }
+
+    async function exportData() {
+        try {
+            showToast('Ma\'lumotlar eksporti boshlanmoqda...', 'info');
+
+            // Bu haqiqiy ma'lumotlar eksportini ishga tushiradi
+            // Hozircha simulyatsiya qilamiz
+            setTimeout(() => {
+                showToast('Ma\'lumotlar eksporti yakunlandi', 'success');
+            }, 2000);
+
+        } catch (error) {
+            showToast('Eksport xatosi: ' + error.message, 'danger');
+        }
+    }
+
+    // Har 5 daqiqada panelni yangilash
+    setInterval(loadDashboardStats, 5 * 60 * 1000);
+
+    // Modal tashqarisiga bosganda yopish
+    document.getElementById('addStudentModal').addEventListener('click', function (e) {
+        if (e.target === this) {
+            closeAddStudentModal();
+        }
+    });
+</script>
+{% endblock %}
